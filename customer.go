@@ -1,6 +1,8 @@
 package rental
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Customer struct {
 	name    string
@@ -20,24 +22,34 @@ func (rcvr Customer) AddRental(arg Rental) {
 func (rcvr Customer) Name() string {
 	return rcvr.name
 }
+
+func RegularCharge(rental Rental) float64 {
+	result := 2.0
+	if rental.DaysRented() > 2 {
+		result += float64(rental.DaysRented()-2) * 1.5
+	}
+	return result
+}
+
+func NewReleaseCharge(rental Rental) float64 {
+	return float64(rental.DaysRented()) * 3.0
+}
+
+func ChildrenCharge(rental Rental) float64 {
+	result := 1.5
+	if rental.DaysRented() > 3 {
+		result += float64(rental.DaysRented()-3) * 1.5
+	}
+	return result
+}
 func (rental Rental) Charge() float64 {
-	result := 0.0
 	switch rental.Movie().PriceCode() {
 	case REGULAR:
-		result := 2.0
-		if rental.DaysRented() > 2 {
-			result += float64(rental.DaysRented()-2) * 1.5
-		}
-		return result
+		return RegularCharge(rental)
 	case NEW_RELEASE:
-		result += float64(rental.DaysRented()) * 3.0
-		return result
+		return NewReleaseCharge(rental)
 	case CHILDRENS:
-		result := 1.5
-		if rental.DaysRented() > 3 {
-			result += float64(rental.DaysRented()-3) * 1.5
-		}
-		return result
+		return ChildrenCharge(rental)
 	}
 	return 0
 }
