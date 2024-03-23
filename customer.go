@@ -43,13 +43,12 @@ func (rcvr *Customer) Statement() string {
 	frequentRenterPoints := 0
 	result := fmt.Sprintf("Rental Record for %v\n", rcvr.Name())
 	for _, rental := range rcvr.rentals {
-		thisAmount := Charge(rental)
 		frequentRenterPoints++
 		if rental.Movie().PriceCode() == NEW_RELEASE && rental.DaysRented() > 1 {
 			frequentRenterPoints++
 		}
-		result += fmt.Sprintf("\t%v\t%.1f\n", rental.Movie().Title(), thisAmount)
-		totalAmount += thisAmount
+		result += fmt.Sprintf("\t%v\t%.1f\n", rental.Movie().Title(), Charge(rental))
+		totalAmount += Charge(rental)
 	}
 	result += fmt.Sprintf("Amount owed is %.1f\n", totalAmount)
 	result += fmt.Sprintf("You earned %v frequent renter points", frequentRenterPoints)
