@@ -20,7 +20,7 @@ func (rcvr Customer) AddRental(arg Rental) {
 func (rcvr Customer) Name() string {
 	return rcvr.name
 }
-func Charge(rental Rental) float64 {
+func (rental Rental) Charge() float64 {
 	result := 0.0
 	switch rental.Movie().PriceCode() {
 	case REGULAR:
@@ -47,8 +47,8 @@ func (rcvr *Customer) Statement() string {
 		if rental.Movie().PriceCode() == NEW_RELEASE && rental.DaysRented() > 1 {
 			frequentRenterPoints++
 		}
-		result += fmt.Sprintf("\t%v\t%.1f\n", rental.Movie().Title(), Charge(rental))
-		totalAmount += Charge(rental)
+		result += fmt.Sprintf("\t%v\t%.1f\n", rental.Movie().Title(), rental.Charge())
+		totalAmount += rental.Charge()
 	}
 	result += fmt.Sprintf("Amount owed is %.1f\n", totalAmount)
 	result += fmt.Sprintf("You earned %v frequent renter points", frequentRenterPoints)
