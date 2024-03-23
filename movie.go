@@ -10,10 +10,11 @@ type Movie struct {
 }
 
 func NewMovie(title string, priceCode int) (rcvr Movie) {
-	rcvr = Movie{}
-	rcvr.title = title
-	rcvr.priceCode = priceCode
-	return
+	rcvr = Movie{
+		title:     title,
+		priceCode: priceCode,
+	}
+	return rcvr
 }
 func (rcvr Movie) GetPriceCode() int {
 	return rcvr.priceCode

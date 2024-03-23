@@ -8,10 +8,11 @@ type Customer struct {
 }
 
 func NewCustomer(name string) (rcvr Customer) {
-	rcvr = Customer{}
-	rcvr.rentals = make([]Rental, 0)
-	rcvr.name = name
-	return
+	rcvr = Customer{
+		name:    name,
+		rentals: []Rental{},
+	}
+	return rcvr
 }
 func (rcvr Customer) AddRental(arg Rental) {
 	rcvr.rentals = append(rcvr.rentals, arg)
