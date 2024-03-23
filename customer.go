@@ -38,15 +38,21 @@ func (rental Rental) Charge() float64 {
 	}
 	return result
 }
-func (rcvr *Customer) Statement() string {
+
+func getPoints(rental Rental) int {
+	result := 0
+	result++
+	if rental.Movie().PriceCode() == NEW_RELEASE && rental.DaysRented() > 1 {
+		result++
+	}
+	return result
+}
+func (rcvr Customer) Statement() string {
 	totalAmount := 0.0
 	frequentRenterPoints := 0
 	result := fmt.Sprintf("Rental Record for %v\n", rcvr.Name())
 	for _, rental := range rcvr.rentals {
-		frequentRenterPoints++
-		if rental.Movie().PriceCode() == NEW_RELEASE && rental.DaysRented() > 1 {
-			frequentRenterPoints++
-		}
+		frequentRenterPoints += getPoints(rental)
 		result += fmt.Sprintf("\t%v\t%.1f\n", rental.Movie().Title(), rental.Charge())
 		totalAmount += rental.Charge()
 	}
