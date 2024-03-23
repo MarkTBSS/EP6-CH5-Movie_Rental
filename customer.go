@@ -24,19 +24,22 @@ func (rental Rental) Charge() float64 {
 	result := 0.0
 	switch rental.Movie().PriceCode() {
 	case REGULAR:
-		result += 2
+		result := 2.0
 		if rental.DaysRented() > 2 {
 			result += float64(rental.DaysRented()-2) * 1.5
 		}
+		return result
 	case NEW_RELEASE:
 		result += float64(rental.DaysRented()) * 3.0
+		return result
 	case CHILDRENS:
-		result += 1.5
+		result := 1.5
 		if rental.DaysRented() > 3 {
 			result += float64(rental.DaysRented()-3) * 1.5
 		}
+		return result
 	}
-	return result
+	return 0
 }
 
 func getPoints(rental Rental) int {
@@ -45,14 +48,31 @@ func getPoints(rental Rental) int {
 	}
 	return 1
 }
-func (rcvr Customer) Statement() string {
-	totalAmount := 0.0
-	frequentRenterPoints := 0
-	result := fmt.Sprintf("Rental Record for %v\n", rcvr.Name())
-	for _, rental := range rcvr.rentals {
-		frequentRenterPoints += getPoints(rental)
-		result += fmt.Sprintf("\t%v\t%.1f\n", rental.Movie().Title(), rental.Charge())
-		totalAmount += rental.Charge()
+
+func getTotalPoints(rentals []Rental) int {
+	points := 0
+	for _, rental := range rentals {
+		points += getPoints(rental)
+	}
+	return points
+}
+
+func getTotalAmount(rentals []Rental) float64 {
+	result := 0.0
+	for _, rental := range rentals {
+		result += rental.Charge()
+	}
+	return result
+}
+
+func (customer Customer) Statement() string {
+	frequentRenterPoints := getTotalPoints(customer.rentals)
+	totalAmount := getTotalAmount(customer.rentals)
+	result := fmt.Sprintf("Rental Record for %v\n", customer.Name())
+	for _, rental := range customer.rentals {
+		title := rental.Movie().Title()
+		amount := rental.Charge()
+		result += fmt.Sprintf("\t%v\t%.1f\n", title, amount)
 	}
 	result += fmt.Sprintf("Amount owed is %.1f\n", totalAmount)
 	result += fmt.Sprintf("You earned %v frequent renter points", frequentRenterPoints)
