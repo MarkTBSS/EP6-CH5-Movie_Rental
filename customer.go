@@ -16,8 +16,8 @@ func NewCustomer(name string) (rcvr Customer) {
 	}
 	return rcvr
 }
-func (rcvr Customer) AddRental(arg Rental) {
-	rcvr.rentals = append(rcvr.rentals, arg)
+func (customer Customer) AddRental(arg Rental) {
+	customer.rentals = append(customer.rentals, arg)
 }
 func (rcvr Customer) Name() string {
 	return rcvr.name
